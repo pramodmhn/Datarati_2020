@@ -1,0 +1,101 @@
+%%[
+
+/*SET @dob = AttributeValue("dob__c")
+SET @dob =RequestParameter("dob__c")
+SET @dob = Format(@dob,"d", "Date")
+SET @dateJoined = RequestParameter("dateJoined__c")
+SET @dateJoined = Format(@dateJoined,"d", "Date") */
+
+]%%
+
+<script runat="server" language="javascript">
+
+  Platform.Load("Core","1");
+  try{
+        
+   //var uniqueKey_defualt = "E5B89F58-D93E-418F-9D70-07107E624936";/*Datarati Test*/
+    uniqueKey_defualt = "903FE453-C7CC-4BBA-ABF0-56954610189B";/*"Datarati Internal Contacts - Newsletter"*/
+     uniqueKey = Request.GetQueryStringParameter("id");
+    if(uniqueKey == undefined || uniqueKey == "" || uniqueKey == null){      
+      uniqueKey = uniqueKey_defualt; 
+    }
+
+     /*** Google Recaptcha **/
+    var SECRET_KEY="6Lc4TrYUAAAAALnL20PJubMHUk0jlFtuknqJgLAV";
+    var recaptcha_response_key = Request.GetFormField("g-recaptcha-response"); 
+    var recaptcha_response_obj = getRecaptcha(SECRET_KEY,recaptcha_response_key);
+    var success = recaptcha_response_obj.success;
+    var score = recaptcha_response_obj.score;
+    var action = recaptcha_response_obj.action;
+    //Write(success+":"+score+":"+action);
+    
+    if( success && score > 0.5 ){//NOT ROBOT
+    
+    email = Request.GetFormField("Email__c");
+    if (Stringify(email) != "null" && email != ''){
+      
+      var job_title = Request.GetFormField("Job_Title__c");
+      var office_location = Request.GetFormField("Office_Location__c");
+      var first_name = Request.GetFormField("First_Name__c");     
+      var last_name = Request.GetFormField("Last_Name__c");
+      var thumbnail_url = Request.GetFormField("Thumbnail__c");
+      var subs_key = email;      
+      var dob = Request.GetFormField("dob__c");
+      //dob = Format(newDob,"MM/dd/yyyy");    
+      var dateJoined = Request.GetFormField("dateJoined__c");    
+     // Write(response_name);
+      var record = {
+        "JobTitle" : job_title,
+        "OfficeLocation" : office_location,
+        "EmailAddress" : email,
+        "FirstName" : first_name,
+        "LastName" : last_name,
+        "SubscriberKey" : subs_key,
+        "DOB" : dob,
+        "ThumbnailURL" : thumbnail_url,
+        "CompanyJoinedDate" : dateJoined
+      };
+ 
+      //Write("Records"+Stringify(record));
+      /**add records in DE **/
+      var DEaddStatus = addRowDE(uniqueKey,record);
+
+     /** Return HTML message **/
+      if(DEaddStatus){
+        Write('<div style="text-align: center;"> <h2>   Thank You your record has been added in database. </h2> <p>Thank you for your interest.</p><p></p></div>');
+      }
+      else{
+        Write('<div style="text-align: center;"> <h2>   Thank You but you record already exist in database.  </h2> <p>Thank you for your interest.</p><p></p></div>');
+      }
+
+    }//if end
+    }//if end reCaptcha
+    else{ throw "You are a Robot!!!" }
+  }//try end
+  catch(e){
+    Write('<div style="text-align: center;"> <h2>OOPS...</h2><p>'+Stringify(e)+'</p><p></p></div>');
+  }
+
+  /** Get recaptcha **/
+  function getRecaptcha(SecretKey,ResponseCode){
+    var url = "https://www.google.com/recaptcha/api/siteverify?secret="+SecretKey+"&response="+ResponseCode;    
+    var result = HTTP.Post(url);
+   // result1 = Stringify(result);
+   // Write("Site key: "+response_name+"<br>"+"Secret key: "+ SECRET_KEY+"<br>");
+   // Write("Result: "+result1+"<br>"+result.StatusCode+"<br>");
+   // Write("Response: "+result.Response[0]+"<br>");
+    var responseResult = Platform.Function.ParseJSON(result.Response[0]); 
+    return responseResult;
+  }
+  /**add records in DE **/
+  function addRowDE(uniqueKey,dataRecord){
+    var de = DataExtension.Init(uniqueKey);
+    var filter = {Property:"SubscriberKey",SimpleOperator:"equals",Value:dataRecord.SubscriberKey};
+    var fields = de.Rows.Retrieve(filter);
+    var status = 0;
+    if(fields.length == 0){ //if subscriber key is not exist 
+      var status = de.Rows.Add(dataRecord);       
+    }
+    return status;
+  }
+</script>

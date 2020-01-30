@@ -1,0 +1,233 @@
+<script runat="server">
+  Platform.Load("core","1");
+
+  var headerUrl = "https://pub.s6.exacttarget.com/jm4fbdeb5f1";
+  var footerUrl = "https://pub.s6.exacttarget.com/zzxbep5jn0m";
+  var headerNames = ["Accept-Encoding"];
+  var headerValues = ["gzip, deflate, sdch, br"];
+  var responseHeadear = HTTP.Get(headerUrl, headerNames, headerValues);
+  var responseFooter = HTTP.Get(footerUrl, headerNames, headerValues);
+  Variable.SetValue("header",responseHeadear.Content);
+  Variable.SetValue("footer",responseFooter.Content);
+  //Write(responseHeadear.Content);
+</script>
+
+<!DOCTYPE html>
+<html class="" lang="en" dir="ltr">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="format-detection" content="telephone=no">   
+        <link rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">   
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/skins/all.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  
+       <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery.ui.all.css"><!--datepicker.min.css-->
+      <style>        
+        .brand-bg-dark {background-color: #222222;}
+      @media only screen and (max-width:480px){
+/* MOBILE GLOBAL STYLES - DO NOT CHANGE */
+body, .tb_properties{font-family: Arial !important; font-size: 16px !important; color: #808080 !important; line-height: 1 !important; padding: 0px !important; }.buttonstyles{font-family: Arial !important; font-size: 16px !important; color: #FFFFFF !important; padding: 0px !important; }h1{font-family: Arial !important; font-size: 22px !important; color: #202020 !important; line-height: 1 !important; }h2{font-family: Arial !important; font-size: 20px !important; color: #202020 !important; line-height: 1 !important; }h3{font-family: Arial !important; font-size: 18px !important; color: #202020 !important; line-height: 1 !important; }a:not(.buttonstyles){line-height: 1 !important; }.mobile-hidden{display: none !important; }.responsive-td {width: 100% !important; display: block !important; padding: 0 !important;}
+/* END OF MOBILE GLOBAL STYLES - DO NOT CHANGE */
+}</style>
+<title>    
+    Landing Page | Add Record Data Extension
+        </title>
+  </head>
+<body id="Preference_center" >
+  <header>
+   %%=v(@header)=%%
+  </header>
+<div class="main-content">
+    <div class="container">
+        <div  class="row">
+            <div class="col">
+                <div data-type="slot" data-key="col1">
+                
+                <!-- Form HTML start -->
+                
+
+<script type="javascript" runat="server">
+Platform.Load("Core","1");
+
+var Id = Request.GetQueryStringParameter("id");
+Variable.SetValue("Id",Id);
+//Write(Id);
+var pageId = "1103";
+Variable.SetValue("pageId",pageId)
+
+/**Goggle Recaptcha variables **/
+var SITE_KEY = "6Lc4TrYUAAAAAKXwpu2ao8GI3yAyI_QZKFhkzmte";
+var API_REQUEST_URL = "https://www.google.com/recaptcha/api/siteverify";
+var action_page = 'AddRecordNewsletter';
+
+</script>
+
+
+                
+                <form action="%%=cloudpagesURL(@pageId,'id',@Id)=%%" id="subscription" method="post">
+    <div class="form-row">
+        <div class="form-group col-lg-12">
+            <h2 class="pb-2">
+                Add Record to Newsletter Data Extension</h2>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="Job_Title__c">Job Title</label>
+        <div class="col-sm-6 user_input_div">
+            <input class="form-control requiredField" id="Job_Title__c" name="Job_Title__c" placeholder="Job Title" required="" type="text" value=""></div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="First_Name__c">Office Location</label>
+        <div class="col-sm-6">
+            <select class="form-control" id="Office_Location__c" name="Office_Location__c" value="">
+                <option selected="selected">Sydney Office</option>
+                <option>Melbourne Office</option>
+                <option>Brisbane Office</option>
+                <option>Perth Office</option>
+                <option>Bangalore Office</option>
+            </select></div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="First_Name__c">First Name </label>
+        <div class="col-sm-6 user_input_div">
+            <input class="form-control  requiredField" id="First_Name__c" name="First_Name__c" placeholder="Your First Name *" required="" type="text" value=""></div>
+        <div class="error_div">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="Last_Name__c">Last Name </label>
+        <div class="col-sm-6 user_input_div">
+            <input class="form-control  requiredField" id="Last_Name__c" name="Last_Name__c" placeholder="Your Surname *" required="" type="text" value=""></div>
+        <div class="error_div">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="Email__c">Email Address </label>
+        <div class="col-sm-6 user_input_div">
+            <input class="form-control requiredField requiredEmail" id="Email__c" name="Email__c" placeholder="Your Email Address *" required="" type="email" value=""></div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="Thumbnail__c">Thumbnail URL</label>
+        <div class="col-sm-6">
+            <input id="SubscriberKey__c" name="SubscriberKey__c" type="hidden" value=""> <input class="form-control" id="Thumbnail__c" name="Thumbnail__c" placeholder="Thumbnail URL" type="text" value=""></div>
+        <div class="error_div">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="dob">Date of Birth:</label>
+        <div class="col-sm-6">
+            <input class="form-control requiredField" id="dob" name="dob" placeholder="dd/mm *" type="text" value=""> <input class="form-control" id="dob__c" name="dob__c" type="hidden" value=""></div>
+        <div class="error_div">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="form-check-label col-sm-2" for="dateJoined__c">Company Date Joined</label>
+        <div class="col-sm-6">
+            <input class="form-control requiredField" id="dateJoined" name="dateJoined" placeholder="dd/mm/yyyy *" type="text" value=""> 
+          <input class="form-control" id="dateJoined__c" name="dateJoined__c" type="hidden" value="">
+          <input class="form-control" id="site-key" name="site-key" type="hidden" value="<ctrl:var name=SITE_KEY />">         
+          <input class="form-control" id="action-page" name="action-page" type="hidden" value="<ctrl:var name=action_page />">
+          <input class="form-control" id="g-recaptcha-response" name="g-recaptcha-response" type="hidden" value=""></div>
+        <div class="error_div">
+        </div>
+    </div>
+    <div class="form-row pt-4">
+        <div class="form-group col-md-3">
+            <button class="btn btn-primary btn-lg btn-block" id="subs_btn" type="submit">Submit</button></div>
+    </div>
+</form>
+                
+<!-- Form HTML End -->                
+                
+                
+                
+                </div>                    
+        </div>
+        </div>
+    </div><!--container end -->
+</div><!--main-content end -->
+<div id="footer-wrap">
+<!--// OPEN #footer //-->
+<footer id="footer">
+%%=v(@footer)=%%
+<!--// CLOSE #footer //-->
+</footer>
+</div>
+  
+  
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/iCheck/1.0.2/icheck.min.js"></script>
+<script src="https://pub.s6.exacttarget.com/a50rj211i0e"></script><!--jquery.validate.min.js-->
+<script src="https://pub.s6.exacttarget.com/xb2dbgfjsqh"></script><!--additional-methods.min.js-->
+<script src="https://pub.s6.exacttarget.com/113pwulrwwn"></script><!--customJsValidator-lgia.js-->
+<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script> <!-- datePicker.min.js -->
+<script src="https://www.google.com/recaptcha/api.js?render=6Lc4TrYUAAAAAKXwpu2ao8GI3yAyI_QZKFhkzmte"></script>
+  <script>
+     $(document).ready(function(){  
+        grecaptcha.ready(function() {
+          var site_key = $("#site-key").val();
+          var action_page = $("#action-page").val();
+            grecaptcha.execute(site_key, {action: action_page}).then(function(token) {
+              //console.log(token);
+              $('#g-recaptcha-response').val(token);
+            });
+        });
+     });
+  </script>
+  
+    <script>
+       // (function ($) {
+            
+                $(document).ready(function(){  
+                    /**bootstrap tooltip **/
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $(".hide").hide();
+                  
+                  $( "#dob" ).datepicker({
+                      changeYear: false,
+                      dateFormat : "dd/mm"
+                  });
+                  $("#dob").focus(function(){
+                      $(".ui-datepicker-year").css("display","none");
+                    });
+                   $("#dateJoined").datepicker({                    
+                    changeYear: true,
+                    dateFormat : "dd/mm/yy"
+                  });
+                  
+                    /**prevent default form submission**/
+                    $("form").submit(function(event){  
+                      
+                        var dob =$( "#dob" ).val();
+                        dob = dob+"/1900";//dd/mm/yyyy
+                        dob = dob.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3");//mm/dd/yyyy                        
+                       $("#dob__c" ).val(dob); 
+                      
+                      var dateJoined = $("#dateJoined").val();
+                      dateJoined = dateJoined.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$3/$2/$1");//yyyy/mm/dd/
+                      $("#dateJoined__c").val(dateJoined);
+                      
+                        event.preventDefault(); 
+                    }); 
+                     /**icheck effects**/
+                        $('input').iCheck({
+                            checkboxClass: 'icheckbox_square',
+                            radioClass: 'iradio_square',
+                            increaseArea: '20%' // optional
+                          });
+                      //Append the error_div element to parent element
+            $(".requiredField").after("<div class='error_div'></div>");
+            customFormValidation("subscription","subs_btn"); //(form ID, submitbtn ID)   
+                  
+        }); // ready
+     //})(jQuery); // end     
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  
+<head>
+  <!--
+%%[
+  SET @id = RequestParameter("id")
+  
+]%% -->
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="http://image.s6.exacttarget.com/lib/fe8c12737265037a71/m/1/055afecc-58cd-48e4-95e5-3ff4e3ddc692.png">
+    <title>Andrew - Test PC
+    </title>
+
+    <!-- Bootstrap core CSS NOT CHANGE-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/743006a615.js"></script>
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="http://pub.s6.exacttarget.com/liifl12s3qh">
+    <!-- Select Css-->
+    <link rel="stylesheet" href="http://pub.s6.exacttarget.com/xxv3aeto3qs">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+  
+
+  
+  <script runat="server">
+    Platform.Load("core","1");
+
+    var headerUrl = "https://pub.s6.exacttarget.com/wdqtmwbctzv";
+    var footerUrl = "https://pub.s6.exacttarget.com/5rx2s3pfqdz";
+    var headerNames = ["Accept-Encoding"];
+    var headerValues = ["gzip, deflate, sdch, br"];
+    var responseHeadear = HTTP.Get(headerUrl, headerNames, headerValues);
+    var responseFooter = HTTP.Get(footerUrl, headerNames, headerValues);
+    Variable.SetValue("header",responseHeadear.Content);
+    Variable.SetValue("footer",responseFooter.Content);
+    //Write(response.Content);
+  </script>
+<body>
+    <!-- header -->
+    <div id="header">%%=v(@header)=%%</div>
+
+    <!-- /header -->
+
+    <!-- /container -->
+  
+  %%[
+  var @rows, @row, @rowCount
+
+set @rows = LookupRows("Preferences","id", @id)
+set @rowCount = rowcount(@rows)
+ 
+  if @rowCount > 0 then
+
+
+    var @email, @first_name, @last_name, @phone, @news1, @offers1
+    set @row = row(@rows, 1) /* get row based on counter */
+    set @first_name = field(@row,"first_name")
+    set @last_name = field(@row,"last_name")
+    set @phone = field(@row,"phone")
+    set @email = field(@row,"email")
+    set @state = field(@row,"state")
+    set @postcode = field(@row,"postcode")
+    set @news1 = field(@row,"preference_1")
+    set @offers1 = field(@row,"preference_2")
+
+ /*
+  output(concat("id: ", @id))
+  output(concat("   rows: ", @rowcount))
+  output(concat("   first name: ", @first_name))
+  output(concat("   newsletter: ", @news1))
+
+ 
+ */
+
+    endif
+  
+  ]%%
+
+    <div class="container banner_full normal-padding-2">
+        <div class="row">
+            <div class="col-md-12">
+                <img alt="Logo" border="0" class="img-responsive" src="http://image.s6.exacttarget.com/lib/fe8c12737265037a71/m/1/19eb7286-4069-47b5-b5a7-021c78cac4eb.jpg">
+            </div>
+        </div>
+    </div>
+    <div class="container main-container">
+
+        <div class="row">
+            <div class="col-md-12 normal-padding-2">
+                <h4 class="h4">Please update your personal details and communication preferences using the form below.</h4>
+            </div>
+            <div class="col-md-12 normal-padding">
+                <div class="panel panel-default panel-grey">
+                    <div class="panel-body">
+
+                        <form role="form" id="myForm" method="post" action="https://pub.s6.exacttarget.com/janspkjygwy">
+
+                            <div class="row">
+
+                                <div class="col-md-12 col-md-12  col-sm-12">
+                                    <h4 class="h4-2">Your Details</h4>
+                                </div>
+                                <div class="col-md-12 normal-padding">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+
+                                            <input type="text" class="form-control custom-inp" id="First_Name" name="First_Name" placeholder="First name" data-error="Complete this field" value="%%=v(@First_Name)=%%" required>
+                                            <label for="First_Name" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+
+                                            <input type="text" class="form-control custom-inp" id="Last_Name" name="Last_Name" placeholder="Last name" data-error="Complete this field" value="%%=v(@Last_Name)=%%" required>
+                                            <label for="Last_Name" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <input type="email" class="form-control custom-inp" id="Email" name="email" placeholder="Email" data-error="Complete this field" value="%%=v(@Email)=%%" required>
+                                            <label for="Email" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                        <div class="col-md-6 col-sm-6">
+
+                                            <input type="text" class="form-control custom-inp" id="Phone" name="phone" placeholder="Phone" data-error="Complete this field" value="%%=v(@Phone)=%%" required>
+                                            <label for="Phone__c" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                        <div class="col-md-4 col-sm-3">
+
+                                            <select name="state" id="state" class="form-control custom-inp" required>
+                                                <option value="">Select state</option>
+                                                <option value="ACT" %%=iif(@state == "ACT","selected='selected'","")=%%>Australian Capital Territory</option>
+                                                <option value="NSW" %%=iif(@state == "NSW","selected='selected'","")=%%>New South Wales</option>
+                                                <option value="NT" %%=iif(@state == "NT","selected='selected'","")=%%>Northern Territory</option>
+                                                <option value="QLD" %%=iif(@state == "QLD","selected='selected'","")=%%>Queensland</option>
+                                                <option value="SA" %%=iif(@state == "SA","selected='selected'","")=%%>South Australia</option>
+                                                <option value="TAS" %%=iif(@state == "TAS","selected='selected'","")=%%>Tasmania</option>
+                                                <option value="VIC" %%=iif(@state == "VIC","selected='selected'","")=%%>Victoria</option>
+                                                <option value="WA" %%=iif(@state == "WA","selected='selected'","")=%%>Western Australia</option>
+                                            </select>
+                                            <label for="state" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                        <div class="col-md-2 col-sm-3">
+
+                                            <input type="text" class="form-control custom-inp" id="Postcode" name="postcode" placeholder="Postcode" data-error="Complete this field" value="%%=v(@Postcode)=%%"  required>
+                                            <label for="Postcode" class="label-title-2">&nbsp;</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-xs-12 col-md-12 col-sm-12 normal-padding-3">
+                                    <h4 class="h4-2">Your Communication Preferences</h4>
+                                </div>
+
+                    
+                      
+                      
+                                <div class="col-md-12 normal-padding-2">
+                                    <div class="row">
+                                        <div class="col-md-7 col-xs-6 col-sm-6 medium-padding">
+                                            <span class="normal-title">Newsletter</span>
+                                        </div>
+                                        <div class="col-md-5 col-xs-6 col-sm-6 medium-padding">
+                                            <input type="checkbox" name="news1_box" id="news1_box" value="True" class="css-checkbox form-control" %%[IF @news1 == 'True' THEN]%% checked %%[ENDIF]%%>
+                                            <label for="news1_box" class="css-label radGroup1">Send me an email</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-7 col-xs-6 col-sm-6 medium-padding">
+                                            <span class="normal-title">Hot Offers</span>
+                                        </div>
+                                        <div class="col-md-5 col-xs-6 col-sm-6 medium-padding">
+                                            <input type="checkbox" name="offers1_box" id="offers1_box" value="True" class="css-checkbox form-control" %%[IF @offers1 == 'True' THEN]%% checked %%[ENDIF]%%>
+                                            <label for="offers1_box" class="css-label radGroup1">Send me an email</label>
+                                        </div>
+                                    </div>
+                                   
+
+                                </div>
+                            </div>
+                            <!-- Button -->
+                            <div class="row normal-padding-row">
+                                <div class="form-group no-pad-bottom">
+                                    <div class="col-md-2 col-sm-4 col-xs-12 center-block col-centered">
+                                        <div class="form-group">
+                                          <input type="hidden" name="id" value="%%=v(@id)=%%">
+                                            <button type="submit" class="btn btn-primary button_two-2"><span class="button-pad">Save My Settings</span> </button>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 normal-padding-4">&nbsp;</div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /container -->
+
+    <!--footer start from here-->
+    <div id="footer">%%=v(@footer)=%%</div>
+    <!--footer start from here-->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!-- jqueryvalidation -->
+    <script src="http://pub.s6.exacttarget.com/e25sqzzvhap"></script>
+
+    <!-- Select JS -->
+    <script src="http://pub.s6.exacttarget.com/2xwsueicaim"></script>
+
+
+  
+    <script>
+        $('#btn_submit').click(function() {
+            var q1 = $('input[name=q1]:checked').val();
+            if (q1 == 'Yes') {
+                $('#myForm').validate().settings.ignore = [];
+            } else if (q1 == 'No') {
+                $("form").validate().cancelSubmit = true;
+            }
+        });
+
+        /*****************CUSTOM FUNCTIONS*************/
+        $.validator.addMethod("alpha", function(value, element) {
+            return this.optional(element) || value == value.match(/^[a-zA-Z-.\s]+$/);
+        });
+
+        $.validator.addMethod("regex", function(value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        });
+
+        $.validator.addMethod("phoneAUS", function(phone_number, element) {
+            //phone_number = phone_number.replace(/\s+/g, "");
+            //return this.optional(element) || phone_number.length > 9 &&  phone_number.match(/^\+[0-9]{12}$/);
+            return this.optional(element) || phone_number.length > 9 && phone_number.length < 11;
+        });
+
+        $.validator.addMethod("multidate", function(value, element) {
+
+            var mday = (document.getElementById("dobday").value);
+            var mmonth = (document.getElementById("dobmonth").value);
+            var myear = (document.getElementById("dobyear").value);
+            //alert(myear);  
+            var fulldate = mmonth + '/' + mday + '/' + myear;
+
+            var date_regex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
+            if (!(date_regex.test(fulldate))) {
+                return false;
+            }
+
+            if (mday == '') {
+                return false;
+            } else {
+                if (mmonth == '') {
+                    return false;
+                } else {
+                    if (myear == '') {
+                        return false;
+                    } else {
+                        if (mday > 28 && mmonth == 2) {
+                            var leapy = 0;
+                            if ((parseInt(myear) % 4) == 0) {
+                                if (parseInt(myear) % 100 == 0) {
+                                    if (parseInt(myear) % 400 != 0) {
+                                        //alert("Not Leap");
+                                        leapy = 0;
+                                    }
+                                    if (parseInt(myear) % 400 == 0) {
+                                        //alert("Leap");
+                                        leapy = 1;
+                                    }
+                                }
+                                if (parseInt(myear) % 100 != 0) {
+                                    //alert("Leap");
+                                    leapy = 1;
+                                }
+                            }
+                            if ((parseInt(myear) % 4) != 0) {
+                                //alert("Not Leap");
+                                leapy = 0;
+                            }
+                        } else {
+                            leapy = 1;
+                        }
+
+                        if (leapy == 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
+        });
+        /*******************************************/
+
+        $().ready(function() {
+            $("#myForm").validate({
+                ignore: [],
+                errorPlacement: function(error, element) {
+
+                    $(element)
+                        .closest("form")
+                        .find("label[for='" + element.attr("id") + "']")
+                        .append(error);
+                },
+                errorElement: "div",
+                messages: {
+                    firstname: {
+                        required: "This field is required.",
+                        alpha: "Only letters",
+                    },
+                    lastname: {
+                        required: "This field is required.",
+                        alpha: "Only letters",
+                    },
+                    email: {
+                        required: "This field is required.",
+                        email: "Invalid email address.",
+                        regex: "Invalid email address.",
+                    },
+                    phone: {
+                        required: "This field is required.",
+                        phoneAUS: "Invalid phone number.",
+                    },
+
+                    year: {
+
+                        multidate: "Please select a valid date"
+                    },
+                    states: {
+                        required: "This field is required.",
+                    },
+                    post: {
+                        required: "This field is required.",
+                        number: "Only numbers.",
+                    },
+
+                },
+                rules: {
+                    firstname: {
+                        required: true,
+                        alpha: true
+                    },
+                    lastname: {
+                        required: true,
+                        alpha: true
+                    },
+                    email: {
+                        required: true,
+                        email: true,
+                        regex: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i
+                    },
+                    phone: {
+                        required: true,
+                        phoneAUS: true,
+                    },
+
+
+                    states: {
+                        required: true,
+                    },
+                    post: {
+                        required: true,
+                        number: true
+                    },
+
+                }
+
+            });
+
+        });
+
+        /*******************************************************************************/
+    </script>
+</body>
+
+</html>

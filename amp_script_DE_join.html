@@ -1,0 +1,54 @@
+<!--%%[
+var @FirstName, @SubjectLine
+
+ SET @PK= AttributeValue('ContactKey')
+  SET @DATA_DE            = 'InformaticaSubscribers'
+  SET @DATA_ROWSET           = LookUpRows(@DATA_DE,'Email',@PK)
+  SET @DATA_CHECK           = Rowcount(@DATA_ROWSET)
+
+
+IF @DATA_CHECK>0 THEN
+  SET @Firstname = Field(row(@DATA_ROWSET,@DATA_CHECK), "FirstName")
+  SET @Firstname = ProperCase(@Firstname)
+  SET @SubjectLine = Concat(@Firstname,', thanks for starting your OFX registration')
+ELSE 
+ SET @SubjectLine = 'Thanks for starting your OFX registration'
+ENDIF
+]%%-->
+
+
+SET @messageContext = Lowercase(_messagecontext)
+'message_context',@messageContext,
+SET @request = HTTPPost(@API_URL,"application/json", @payload, @response,"package_code",@PKCODE,"subscriber_key",@subkey,"batch_id",@batchid, 'Authorization',@AUTH,'message_context',@messageContext,'Accept-Encoding', 'identity')
+
+
+ /*Metadata for tracking*/
+VAR @META_DATA_DE, @META_DATA_RECORDS 
+SET @META_DATA_DE = 'DocGen_GV_Metadata_DE'
+/*SET @META_DATA_RECORDS = LookupRows(@META_DATA_DE,'Package',@PKCODE)*/
+SET @META_DATA_RECORDS = LookupRows("DocGen_GV_Metadata_DE","package","ONB_WELCOME")
+SET @META_DATA_DE_CHECK = rowcount(@META_DATA_RECORDS)
+
+IF @META_DATA_DE_CHECK > 0  THEN 
+   SET @GV_TEMPLATE_CODE  = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Template ID')
+   SET @GV_BUSINESS_AREA  = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Business_Area')
+   SET @GV_CATEGORY_TYPE  = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Category_Type')
+   SET @GV_CLASSIFICATION = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Classification')
+   SET @GV_SUB_DOC_TYPE   = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Sub_Doc_Type')
+   SET @GV_CHANNEL        = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Channel')
+   SET @GV_DIRECTION      = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Direction')
+   SET @GV_DOC_TYPE       = Field(row(@META_DATA_RECORDS,@META_DATA_DE_CHECK),'Doc_Type')
+ENDIF
+
+ /*Metadata for tracking*/
+ OutputLine(ContentBlockByKey("DocGen_GV_Metadata"))/*content Builder/Content Blocks/DocGen GV Metadata*/
+
+Row count :  %%=v(@META_DATA_DE_CHECK)=%%<br>
+@GV_TEMPLATE_CODE =  %%=v(@GV_TEMPLATE_CODE)=%%<br>
+@GV_BUSINESS_AREA =  %%=v(@GV_BUSINESS_AREA)=%%<br>
+@GV_CATEGORY_TYPE =  %%=v(@GV_CATEGORY_TYPE)=%%<br>
+@GV_CLASSIFICATION =  %%=v(@GV_CLASSIFICATION)=%%<br>
+@GV_SUB_DOC_TYPE =  %%=v(@GV_SUB_DOC_TYPE)=%%<br>
+@GV_CHANNEL   =  %%=v(@GV_CHANNEL)=%%<br>
+@GV_DIRECTION  =  %%=v(@GV_DIRECTION)=%%<br>
+@GV_DOC_TYPE  =  %%=v(@GV_DOC_TYPE)=%%<br>
