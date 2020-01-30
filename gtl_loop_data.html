@@ -1,0 +1,120 @@
+<h2>
+  GTL
+</h2>
+<script language="javascript" runat="server">
+
+  Platform.Load("Core","1");
+
+  var Json= [    
+    { "Newsletter":
+    [
+    {
+      "Recipient": {
+        "CurrentDate": "22-02-1029",
+        "Name": "Pramod",
+        "Order_Details":[
+          {"SKU":"1","product_Name":"book"},
+          {"SKU":"2","product_Name":"food"}
+        ]
+      }
+    }, 
+    {
+      "Recipient": {
+        "CurrentDate": "22-02-1029",
+        "Name": "Pramod2",
+        "Order_Details":[
+          {"SKU":"12","product_Name":"book2"},
+          {"SKU":"22","product_Name":"food2"}
+        ]
+      }      
+    }
+  ]}, //Newsletter
+    {"Welcome" :[
+      {"FirstName": "Nick",
+       "LastName" : "G"
+      },
+      {"FirstName": "Davic",
+       "LastName" : "Chi"
+      }
+    ]  }//Newsletter    
+  ];
+  
+ // var jsonParent = Stringify(Json);
+  //var emalJson = Stringify(Json[0].Email);
+  //var newsletterJson = Stringify(Json[0].Newsletter);
+ // var newVal = emalJson;
+  
+  var welcome = false;
+  var newsletter = false;
+  //Write("newVal"+Stringify(Json[0].email)+"<br>");
+  for(var obj in Json){
+    var val = Json[obj];
+    for(var prop in val){
+      var key = prop;
+      var arrObj = Stringify(Json[obj][prop]);
+     
+       switch(key){
+          case 'Newsletter':
+                newsletter = true;
+                newsletterData = arrObj;                
+               displayNewsletter(newsletterData);                
+             break;
+          case 'Welcome':
+               welcome =  true;
+               welcomeData = arrObj;
+             displayWelcome(welcomeData);
+             break;
+             }//switch
+      
+    }   //for
+  }//for
+
+function displayNewsletter(newsletterData){
+</script>
+  {{.datasource newsletterVar1 type=variable}}
+            {{.data}}
+               {"target" :"newsletterData"}
+            {{/data}}
+
+          <br><br>         
+           {{.datasource newsletterVar2 type=nested}}
+             {{.data}}
+              {"target":"newsletterVar1.Recipient"}
+             {{/data}}
+
+               CurrentDate: {{CurrentDate}}<br>           
+
+              {{.datasource newsletterVar3 type=nested}}
+                  {{.data}}
+                   {"target":"newsletterVar2.Order_Details"}
+                  {{/data}}
+               SKU:{{SKU}}<br>
+              Product: {{product_Name}}<br>
+             {{/datasource}}
+             <br>
+           {{/datasource}}
+
+          {{/datasource}}
+
+<script language="javascript" runat="server">
+}
+function displayWelcome(welcomeData){
+</script>
+      <h2>
+        Welcome Data:
+      </h2>
+           {{.datasource welcomeVar1 type=variable}}
+ 
+           {{.data}}
+            {"target":"welcomeData"}
+           {{/data}}
+
+          FirstName: {{FirstName}}<br>
+          LastName: {{LastName}}<br><br>
+
+          {{/datasource}}
+<script language="javascript" runat="server">
+}
+</script>
+
+
