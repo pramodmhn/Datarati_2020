@@ -1,0 +1,138 @@
+<p class="d-none">
+    Code
+</p>
+<script runat="server">
+    /**Journey API Entry**/
+
+    Platform.Load("Core", "1.1.1");
+ try {
+    var request = {};
+    var uniqueKey = "E5B89F58-D93E-418F-9D70-07107E624936"; // Datarati Test  
+    var email = Request.GetFormField("Email__c");
+    var job_title = Request.GetFormField("Job_Title__c");
+    var office_location = Request.GetFormField("Office_Location__c");
+    var first_name = Request.GetFormField("First_Name__c");
+    var last_name = Request.GetFormField("Last_Name__c");
+    var thumbnail_url = Request.GetFormField("Thumbnail__c");
+    var subs_key = email;
+    var dob = Request.GetFormField("dob__c");
+    dob = Format(dob,"MM/dd/yyyy"); 
+    var dateJoined = Request.GetFormField("dateJoined__c");
+    dateJoined = Format(dateJoined,"MM/dd/yyyy"); 
+    var company = "Datarati";
+    var subscriberKey = email;
+
+    // Static API authentication properties 
+    var grantType = "client_credentials";
+    var clientId = "46h1splf6i99pb1d18enmnd6";
+    var clientSecret = "XwueTFYlu7L2BjRsslCdlFa9";
+    var accountId = "6391294";
+    // Static config 
+    var eventDefinitionKey = "APIEvent-0207e1a3-40f2-d43b-acb5-3746894d96cf"; // unique key for the API Event used as the entry source for the journey 
+    var authUrl = "https://mcpdwdml-zryw5dczwlf-f-f9kcm.auth.marketingcloudapis.com/v2/token";
+    var interactionUrl = "https://mcpdwdml-zryw5dczwlf-f-f9kcm.rest.marketingcloudapis.com/interaction/v1/events";
+    var contentType = "application/json";
+    var tokenBody = {
+        "grant_type": grantType,
+        "client_id": clientId,
+        "client_secret": clientSecret,
+        "account_id": accountId
+    }
+    var tokenBody = Stringify(tokenBody);
+
+    var interactionBody = {
+        "ContactKey": subscriberKey,
+        "EventDefinitionKey": eventDefinitionKey,
+        "EstablishContactKey": false,
+        "Data": {
+            "SubscriberKey": subscriberKey,
+            "EmailAddress": email,
+            "FirstName": first_name,
+            "LastName": last_name,
+            "CompanyJoinedDate": dateJoined,
+            "JobTitle": job_title,
+            "ThumbnailURL": thumbnail_url,
+            "OfficeLocation": office_location,
+            "DOB": dob,
+            "Company": company,
+            "Active":  true
+        }
+    }
+    interactionBody = Stringify(interactionBody);
+
+    var newMember = true;
+
+   
+        /**Check if the duplicate subscriber key exist in DE **/
+        newMember = (!isDuplicateSubscriberKeyInDE(uniqueKey,subscriberKey));    
+        if(newMember){//API start  
+          var accessToken = GetAccessTokenForAPI(authUrl, contentType, tokenBody);
+        }//if end newMember
+
+        // Write(Stringify(accessToken));
+        if (accessToken != null) {   
+            var success = InjectSubscriberIntoAPIEventForJourney(interactionUrl, contentType, interactionBody, accessToken);
+        }
+        if (success) {
+           /**upsert subscriber attributes in ALL SUBSCRIBER for Personalization**/    
+          var newSubscriber = {
+            "EmailAddress": email,
+            "SubscriberKey": subscriberKey,
+            "EmailTypePreference": "HTML",
+            "Attributes":{"First Name": first_name, "Last Name": last_name,"Company": company}
+          };
+          var subObj = Subscriber.Init(subscriberKey);
+          var status = subObj.Upsert(newSubscriber);
+            Write("<h2>Welcome to Datarati</h2>");
+        } else {
+            Write("Contact already exist");
+        }
+
+    } catch (ex) {
+        Write("Exception Error: " + Stringify(ex));
+    }
+    // https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-programmatic-content.meta/mc-programmatic-content/ssjs_httpPost.htm
+    function GetAccessTokenForAPI(url, contentType, payload) {
+        var accessTokenRequest = HTTP.Post(url, contentType, payload);
+
+        if (accessTokenRequest.StatusCode == 200) { // 200 is successful
+            //Write("accessTokenRequest"+Stringify(accessTokenRequest.Response[0]));
+            var tokenResponse = Platform.Function.ParseJSON(accessTokenRequest.Response[0]);
+            //Write("<br><br>"+Stringify(tokenResponse.access_token));
+            return tokenResponse.access_token;
+        }
+
+        // Call failed, return nothing
+        return null;
+    }
+
+    // https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-apis.meta/mc-apis/postEvent.htm
+    function InjectSubscriberIntoAPIEventForJourney(url, contentType, payload, accessToken) {
+        var headerNames = ["Authorization"];
+        var headerValues = ["Bearer " + accessToken];
+        var eventRequest = HTTP.Post(url, contentType, payload, headerNames, headerValues);
+        //Write("eventRequest"+Stringify(eventRequest));
+        //OUTPUT: {"StatusCode":201,"Response":["{\"eventInstanceId\":\"14abc7e5-5549-4f21-b43a-2abb62184bd5\"}"]}
+
+        if (eventRequest.StatusCode == 201) { // 201 is Created
+            var requestResponse = Platform.Function.ParseJSON(eventRequest.Response[0]);
+            // Write(Stringify(requestResponse)); 
+            if (requestResponse.eventInstanceId != null && requestResponse.eventInstanceId != "") { // eventInstanceId is a GUID             
+                return true; // we got a GUID the event has been fired
+            }
+        }
+        return false; // the injection failed
+    }
+  
+  
+  //chedk if the duplicate subscriber key already exist in DE
+  function isDuplicateSubscriberKeyInDE(uniqueKey,subscriberKey){
+    var de = DataExtension.Init(uniqueKey);
+    var filter = {Property:"SubscriberKey",SimpleOperator:"equals",Value:subscriberKey};
+    var fields = de.Rows.Retrieve(filter);
+    if(fields.length > 0){
+      return true;
+    }
+    return false;
+  }
+</script>

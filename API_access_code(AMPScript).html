@@ -1,0 +1,141 @@
+%%[
+SET @dob =RequestParameter("dob__c")
+SET @dob = Format(@dob,"d", "Date")
+SET @dateJoined = RequestParameter("dateJoined__c")
+SET @dateJoined = Format(@dateJoined,"d", "Date") 
+]%%
+<script runat="server"> 
+
+  Platform.Load("Core","1");
+  var request = {};
+  var uniqueKey = "E5B89F58-D93E-418F-9D70-07107E624936";// Datarati Test  
+  var email = Request.GetFormField("Email__c");        
+  var job_title = Request.GetFormField("Job_Title__c");
+  var office_location = Request.GetFormField("Office_Location__c");
+  var first_name = Request.GetFormField("First_Name__c");
+  var last_name = Request.GetFormField("Last_Name__c");
+  var thumbnail_url = Request.GetFormField("Thumbnail__c");
+  var subs_key = email; 
+  var dob = Variable.GetValue("@dob") ; 
+  var dateJoined = Variable.GetValue("@dateJoined") ;
+  var company = "Datarati";  
+  var subscriberKey = email;
+  Variable.SetValue("subscriberKey",subscriberKey);
+
+
+  // Static API authentication properties 
+  var grantType = "client_credentials";  
+  var clientId = "46h1splf6i99pb1d18enmnd6";  
+  var clientSecret = "XwueTFYlu7L2BjRsslCdlFa9"; 
+  var accountId = "6391294";
+  // Static config 
+  var eventDefinitionKey = "APIEvent-0207e1a3-40f2-d43b-acb5-3746894d96cf";// unique key for the API Event used as the entry source for the journey 
+  SetVar("authUrl","https://mcpdwdml-zryw5dczwlf-f-f9kcm.auth.marketingcloudapis.com/v2/token"); 
+  SetVar("interactionUrl","https://mcpdwdml-zryw5dczwlf-f-f9kcm.rest.marketingcloudapis.com/interaction/v1/events");  
+  SetVar("contentType","application/json");
+  var tokenBody = {
+    "grant_type": grantType,
+    "client_id": clientId,
+    "client_secret": clientSecret,
+    "account_id": accountId
+  }
+  Variable.SetValue("tokenBody",Stringify(tokenBody));
+
+  var interactionBody = {
+    "ContactKey": subscriberKey, 
+    "EventDefinitionKey": eventDefinitionKey,
+    "Data": {
+      "SubscriberKey": subscriberKey,
+      "EmailAddress": email,
+      "FirstName": first_name,
+      "LastName": last_name,
+      "CompanyJoinedDate": Variable.GetValue("@dateJoined"),
+      "JobTitle": job_title,
+      "ThumbnailURL": thumbnail_url,
+      "OfficeLocation": office_location,
+      "DOB": Variable.GetValue("@dob"),
+      "company": company
+    }
+  }    
+  Variable.SetValue("interactionBody",Stringify(interactionBody));
+
+  var newMember = true;
+
+  try {   
+    /**Check if the duplicate subscriber key exist in DE **/
+    newMember = (!isDuplicateSubscriberKeyInDE(uniqueKey,subscriberKey));    
+    Variable.SetValue("newMember",newMember);
+    if(newMember){//API start  
+</script>
+
+%%[
+    Var  @callstatus, @response, @accessToken, @resultOfParsing
+   /* Set @body = '{"grant_type": "client_credentials","client_id": "46h1splf6i99pb1d18enmnd6","client_secret": "XwueTFYlu7L2BjRsslCdlFa9","account_id": "6391294"}'*/
+    HTTPPost2(@authUrl, @contentType, @tokenBody, True, @callstatus, @response)
+]%%
+
+<script language="javascript" runat="server">
+  }//API end 
+</script>
+
+<script language="javascript" runat="server">
+  if(newMember){//Member not exist
+
+    var callstatus = Variable.GetValue("@callstatus");
+    //Write(Stringify(Platform.Function.ParseJSON(callstatus)));
+    accessToken = Platform.Function.ParseJSON(callstatus);
+    accessToken = accessToken.access_token;
+    // Write(accessToken);
+    Variable.SetValue("accessToken",accessToken);
+</script>
+
+%%[ 
+/*Set @interactionBody = '{"ContactKey": "maharjanpramod@hotmail.com", "EventDefinitionKey":"APIEvent-0207e1a3-40f2-d43b-acb5-3746894d96cf", "Data": {"SubscriberKey":"maharjanpramod@hotmail.com","EmailAddress":"maharjanpramod@hotmail.com","FirstName":"John Smith","LastName":"Maharjan","company":"Datarati"}}'*/
+   Set @accessToken = CONCAT('Bearer ', @accessToken)
+   HTTPPost2(@interactionUrl, @contentType, @interactionBody, True, @callstatus, @response, 'Authorization', @accessToken)
+]%%
+
+<script language="javascript" runat="server">
+  var callstatus2 = Variable.GetValue("@callstatus");
+  //Write(Stringify(Platform.Function.ParseJSON(callstatus)));
+  callstatus2 = Platform.Function.ParseJSON(callstatus2);
+  callstatus2 = callstatus2.eventInstanceId;
+
+  if(callstatus2){
+    /**upsert subscriber attributes**/    
+    var newSubscriber = {
+      "EmailAddress": email,
+      "SubscriberKey": subscriberKey,
+      "EmailTypePreference": "HTML",
+      "Attributes":{"First Name": first_name, "Last Name": last_name,"Company": company}
+    };
+    var subObj = Subscriber.Init(subscriberKey);
+    var status = subObj.Upsert(newSubscriber);
+
+    Write("<h2>Welcome to Datarati</h2>");
+  }
+  }//Member does not exist end 
+  else{
+    Write("Contact already exist");
+  } 
+  } catch (ex) {
+    Write("Exception Error: " + Stringify(ex));
+  }
+
+  // sets JS and AMPScript variables
+  function SetVar(varName, varValue){
+    request[varName] = varValue;
+    Variable.SetValue(varName, varValue);
+  }
+
+  //chedk if the duplicate subscriber key already exist in DE
+  function isDuplicateSubscriberKeyInDE(uniqueKey,subscriberKey){
+    var de = DataExtension.Init(uniqueKey);
+    var filter = {Property:"SubscriberKey",SimpleOperator:"equals",Value:subscriberKey};
+    var fields = de.Rows.Retrieve(filter);
+    if(fields.length > 0){
+      return true;
+    }
+    return false;
+  }
+</script>
